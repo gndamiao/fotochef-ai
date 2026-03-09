@@ -11,7 +11,25 @@ const timeline = [
 
 const Obrigado = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const status = searchParams.get("status") || "approved";
+  const token = searchParams.get("token") || "";
+  const [countdown, setCountdown] = useState(5);
+
+  useEffect(() => {
+    if (status !== "approved" || !token) return;
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          navigate(`/status?token=${encodeURIComponent(token)}`);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [status, token, navigate]);
 
   return (
     <div className="min-h-screen">

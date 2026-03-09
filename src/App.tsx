@@ -23,6 +23,7 @@ const App = () => (
           <Route path="/upload" element={<Upload />} />
           <Route path="/obrigado" element={<Obrigado />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/status" element={<Status />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
