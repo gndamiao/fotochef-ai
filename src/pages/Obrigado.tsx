@@ -75,9 +75,14 @@ const Obrigado = () => {
               <h1 className="font-playfair text-3xl sm:text-4xl font-bold mb-3">
                 Bem-vindo ao FotoChef!
               </h1>
-              <p className="text-muted-foreground text-sm max-w-md mx-auto">
+              <p className="text-muted-foreground text-sm max-w-md mx-auto mb-4">
                 Você receberá em breve um e-mail com um link exclusivo para enviar suas fotos. Fique de olho na caixa de entrada!
               </p>
+              {token && countdown > 0 && (
+                <p className="text-primary text-sm font-bold animate-pulse">
+                  Redirecionando em {countdown}...
+                </p>
+              )}
             </div>
 
             {/* Timeline */}
