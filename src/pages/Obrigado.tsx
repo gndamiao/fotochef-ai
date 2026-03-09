@@ -1,4 +1,5 @@
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const timeline = [
   { icon: "✅", title: "Pagamento confirmado", time: "Agora mesmo", status: "done" },
@@ -10,7 +11,25 @@ const timeline = [
 
 const Obrigado = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const status = searchParams.get("status") || "approved";
+  const token = searchParams.get("token") || "";
+  const [countdown, setCountdown] = useState(5);
+
+  useEffect(() => {
+    if (status !== "approved" || !token) return;
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          navigate(`/status?token=${encodeURIComponent(token)}`);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [status, token, navigate]);
 
   return (
     <div className="min-h-screen">
@@ -56,9 +75,14 @@ const Obrigado = () => {
               <h1 className="font-playfair text-3xl sm:text-4xl font-bold mb-3">
                 Bem-vindo ao FotoChef!
               </h1>
-              <p className="text-muted-foreground text-sm max-w-md mx-auto">
+              <p className="text-muted-foreground text-sm max-w-md mx-auto mb-4">
                 Você receberá em breve um e-mail com um link exclusivo para enviar suas fotos. Fique de olho na caixa de entrada!
               </p>
+              {token && countdown > 0 && (
+                <p className="text-primary text-sm font-bold animate-pulse">
+                  Redirecionando em {countdown}...
+                </p>
+              )}
             </div>
 
             {/* Timeline */}
