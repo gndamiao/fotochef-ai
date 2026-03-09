@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Upload from "./pages/Upload";
 import Obrigado from "./pages/Obrigado";
 import Dashboard from "./pages/Dashboard";
+import Status from "./pages/Status";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

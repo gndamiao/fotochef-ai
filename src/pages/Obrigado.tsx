@@ -1,4 +1,5 @@
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const timeline = [
   { icon: "✅", title: "Pagamento confirmado", time: "Agora mesmo", status: "done" },
