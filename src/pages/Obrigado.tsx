@@ -39,8 +39,8 @@ const Obrigado = () => {
       {/* Header */}
       <header className="border-b border-border px-4 py-4">
         <a href="/" className="font-playfair text-xl">
-          <span className="font-bold text-primary">Foto</span>
-          <span className="italic text-foreground">Chef</span>
+          <span className="font-bold text-primary">Belo</span>
+          <span className="italic text-foreground">Prato</span>
         </a>
       </header>
 
@@ -76,7 +76,7 @@ const Obrigado = () => {
               <div className="text-5xl mb-4 animate-pulse-slow">🎊</div>
               <p className="text-primary text-xs tracking-wider uppercase mb-2">Pagamento confirmado</p>
               <h1 className="font-playfair text-3xl sm:text-4xl font-bold mb-3">
-                Bem-vindo ao FotoChef!
+                Bem-vindo ao Belo Prato!
               </h1>
               <p className="text-muted-foreground text-sm max-w-md mx-auto mb-4">
                 Você receberá em breve um e-mail com um link exclusivo para enviar suas fotos. Fique de olho na caixa de entrada!
@@ -118,7 +118,7 @@ const Obrigado = () => {
 
             <div className="mt-12 text-center">
               <p className="text-muted-foreground text-xs">
-                Dúvidas? Escreva para <span className="text-primary">contato@fotochef.com.br</span>
+                Dúvidas? Escreva para <span className="text-primary">contato@beloprato.com.br</span>
               </p>
             </div>
           </>

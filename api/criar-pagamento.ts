@@ -49,7 +49,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         items: [
           {
             id: pacote.id,
-            title: `Pacote ${pacote.nome} – FotoChef`,
+            title: `Pacote ${pacote.nome} – Belo Prato`,
             description: `${pacote.fotos} fotos profissionais para ${restaurante}`,
             quantity: 1,
             unit_price: pacote.preco,
@@ -74,7 +74,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           restaurante,
           ts: Date.now(),
         }),
-        statement_descriptor: 'FOTOCHEF',
+        statement_descriptor: 'BELOPRATO',
       },
     });
 

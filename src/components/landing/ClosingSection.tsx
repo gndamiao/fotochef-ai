@@ -89,18 +89,18 @@ const ClosingSection = () => {
       <footer className="border-t border-border py-8">
         <div className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <a href="/" className="font-playfair text-xl">
-            <span className="font-bold text-primary">Foto</span>
-            <span className="italic text-foreground">Chef</span>
+            <span className="font-bold text-primary">Belo</span>
+            <span className="italic text-foreground">Prato</span>
           </a>
           <div className="flex gap-4 text-xs text-muted-foreground">
             <span>Política de privacidade</span>
             <span>·</span>
             <span>Termos de uso</span>
             <span>·</span>
-            <span>contato@fotochef.com.br</span>
+            <span>contato@beloprato.com.br</span>
           </div>
           <p className="text-xs text-muted-foreground">
-            © 2025 FotoChef. Todos os direitos reservados.
+            © 2025 Belo Prato. Todos os direitos reservados.
           </p>
         </div>
       </footer>

@@ -82,8 +82,8 @@ const Upload = () => {
       {/* Header */}
       <header className="border-b border-border px-4 py-4 flex items-center justify-between">
         <a href="/" className="font-playfair text-xl">
-          <span className="font-bold text-primary">Foto</span>
-          <span className="italic text-foreground">Chef</span>
+          <span className="font-bold text-primary">Belo</span>
+          <span className="italic text-foreground">Prato</span>
         </a>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />

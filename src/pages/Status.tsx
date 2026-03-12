@@ -70,8 +70,8 @@ const Status = () => {
       {/* Header */}
       <header className="border-b border-border px-4 py-4">
         <a href="/" className="font-playfair text-xl">
-          <span className="font-bold text-primary">Foto</span>
-          <span className="italic text-foreground">Chef</span>
+          <span className="font-bold text-primary">Belo</span>
+          <span className="italic text-foreground">Prato</span>
         </a>
       </header>
 
@@ -173,7 +173,7 @@ const Status = () => {
 
             <p className="text-center text-xs text-muted-foreground mt-8">
               Dúvidas? Escreva para{" "}
-              <span className="text-primary">contato@fotochef.com.br</span>
+              <span className="text-primary">contato@beloprato.com.br</span>
             </p>
           </div>
         )}

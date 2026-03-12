@@ -25,7 +25,7 @@ const depoimentos = [
     local: "Frutos do Mar do João, Recife",
   },
   {
-    texto: "Tentei contratar fotógrafo e o orçamento foi R$1.800. Com o FotoChef paguei R$97 e o resultado foi equivalente.",
+    texto: "Tentei contratar fotógrafo e o orçamento foi R$1.800. Com o Belo Prato paguei R$97 e o resultado foi equivalente.",
     nome: "Mariana C.",
     local: "Sushi Bar Hikari, Porto Alegre",
   },
@@ -36,7 +36,7 @@ const Testimonials = () => {
     <section className="py-20 md:py-28 bg-card">
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="font-playfair text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-12">
-          O que donos de restaurante dizem depois de usar o FotoChef
+          O que donos de restaurante dizem depois de usar o Belo Prato
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

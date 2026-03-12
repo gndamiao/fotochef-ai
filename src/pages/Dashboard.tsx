@@ -51,8 +51,8 @@ const Dashboard = () => {
       {/* Header */}
       <header className="border-b border-border px-4 py-4 flex items-center justify-between">
         <a href="/" className="font-playfair text-xl">
-          <span className="font-bold text-primary">Foto</span>
-          <span className="italic text-foreground">Chef</span>
+          <span className="font-bold text-primary">Belo</span>
+          <span className="italic text-foreground">Prato</span>
         </a>
         <a href="/#pacotes">
           <Button variant="gold-outline" size="sm">Novo pedido</Button>
@@ -144,7 +144,7 @@ const Dashboard = () => {
             </div>
 
             <p className="text-center text-xs text-muted-foreground">
-              Precisa de ajuda? <span className="text-primary">contato@fotochef.com.br</span>
+              Precisa de ajuda? <span className="text-primary">contato@beloprato.com.br</span>
             </p>
           </div>
         )}
