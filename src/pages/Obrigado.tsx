@@ -12,8 +12,11 @@ const timeline = [
 const Obrigado = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const status = searchParams.get("status") || "approved";
-  const token = searchParams.get("token") || "";
+
+  // Mercado Pago redirects with: collection_status, payment_id, status, external_reference, preference_id
+  const mpStatus = searchParams.get("collection_status") || searchParams.get("status") || "approved";
+  const status = mpStatus === "null" ? "approved" : mpStatus;
+  const token = searchParams.get("payment_id") || searchParams.get("token") || "";
   const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {

@@ -17,11 +17,16 @@ const PricingSection = () => {
         body: JSON.stringify({ pacote: pacoteId, ...form }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Erro no servidor");
+      }
       if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
+      } else {
+        throw new Error("URL de checkout não retornada");
       }
-    } catch {
-      alert("Erro ao processar. Tente novamente.");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao processar. Tente novamente.");
     } finally {
       setLoading(false);
     }
