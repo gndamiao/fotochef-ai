@@ -5,6 +5,7 @@ const PACOTES = [
   { id: 'basico', nome: 'Básico', preco: 97, fotos: 5 },
   { id: 'profissional', nome: 'Profissional', preco: 197, fotos: 15 },
   { id: 'premium', nome: 'Premium', preco: 347, fotos: 30 },
+  { id: 'teste', nome: 'Teste', preco: 1, fotos: 1 },
 ] as const;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

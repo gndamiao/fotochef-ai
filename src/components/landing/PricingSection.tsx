@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { PACOTES } from "@/lib/config";
 
@@ -6,6 +6,20 @@ const PricingSection = () => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [form, setForm] = useState({ nome: "", email: "", restaurante: "" });
   const [loading, setLoading] = useState(false);
+
+  const isDebugMode = useMemo(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('debug') === 'true';
+  }, []);
+
+  const visiblePackages = useMemo(() => {
+    return PACOTES.filter(pacote => {
+      if (pacote.id === 'teste') {
+        return isDebugMode;
+      }
+      return true;
+    });
+  }, [isDebugMode]);
 
   const handleSubmit = async (pacoteId: string) => {
     if (!form.nome || !form.email || !form.restaurante) return;
@@ -43,7 +57,7 @@ const PricingSection = () => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {PACOTES.map((pacote) => (
+          {visiblePackages.map((pacote) => (
             <div
               key={pacote.id}
               className={`rounded-xl p-6 border transition-all duration-300 ${

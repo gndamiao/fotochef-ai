@@ -44,6 +44,19 @@ export const PACOTES = [
     ],
     destaque: false,
   },
+  {
+    id: 'teste',
+    nome: 'Teste',
+    preco: 1,
+    fotos: 1,
+    descricao: 'Pacote de teste',
+    itens: [
+      '1 foto profissional',
+      'Entrega em até 24h',
+      'Alta resolução (print + digital)',
+    ],
+    destaque: false,
+  },
 ] as const;
 
 export type Pacote = typeof PACOTES[number];
