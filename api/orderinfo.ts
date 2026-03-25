@@ -23,7 +23,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const response = await fetch(
-      `${nocoUrl}/api/v1/db/data/noco/${tableId}?where=(upload_token,eq,${token})`,
+      `${nocoUrl}/api/v1/db/data/noco/p5pdv0auw8u3x4x/mxyv0iodaygx9dz?where=(upload_token,eq,${token})`,
       { headers: { 'xc-auth': nocoToken } }
     );
 
