@@ -12,18 +12,31 @@ const Upload = () => {
 
   const pacoteNome = qtd >= 30 ? "Premium" : qtd >= 15 ? "Profissional" : "Básico";
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const t = params.get("token");
-    const q = parseInt(params.get("qtd") || "5", 10);
-    if (!t) {
-      setEstado("invalido");
-      return;
-    }
-    setToken(t);
-    setQtd(q);
-    setEstado("pronto");
-  }, []);
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const t = params.get("token");
+  if (!t) {
+    setEstado("invalido");
+    return;
+  }
+  setToken(t);
+
+  fetch(`/api/pedido-info?token=${t}`)
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.error || !data.photos_qty) {
+        setEstado("invalido");
+        return;
+      }
+      if (data.status !== "waiting_upload") {
+        setEstado("invalido");
+        return;
+      }
+      setQtd(data.photos_qty);
+      setEstado("pronto");
+    })
+    .catch(() => setEstado("invalido"));
+}, []);
 
   const handleFiles = useCallback((files: FileList | null) => {
     if (!files) return;
