@@ -21,7 +21,7 @@ useEffect(() => {
   }
   setToken(t);
 
-  fetch(`/api/pedido-info?token=${t}`)
+  fetch(`/api/orderinfo?token=${t}`)
     .then((res) => res.json())
     .then((data) => {
       if (data.error || !data.photos_qty) {
