@@ -9,18 +9,12 @@ const PACOTES = [
 ] as const;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const accessToken = process.env.MP_ACCESS_TOKEN;
   if (!accessToken) {
@@ -29,20 +23,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { pacote: pacoteId, nome, email, restaurante } = req.body;
+    const { pacote: pacoteId, nome, email, restaurante, telefone } = req.body;
 
-    if (!pacoteId || !nome || !email || !restaurante) {
+    if (!pacoteId || !nome || !email || !restaurante || !telefone) {
       return res.status(400).json({ error: 'Dados obrigatórios ausentes' });
     }
 
     const pacote = PACOTES.find((p) => p.id === pacoteId);
-    if (!pacote) {
-      return res.status(400).json({ error: 'Pacote inválido' });
+    if (!pacote) return res.status(400).json({ error: 'Pacote inválido' });
+
+    // Fire and forget — salva lead no n8n sem bloquear o redirect pro MP
+    const n8nWebhookUrl = process.env.N8N_LEAD_WEBHOOK_URL;
+    if (n8nWebhookUrl) {
+      fetch(n8nWebhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome,
+          email,
+          restaurante,
+          telefone,
+          pacote: pacote.id,
+          pacote_nome: pacote.nome,
+          photos_qty: pacote.fotos,
+          ts: Date.now(),
+        }),
+      }).catch((err) => console.error('Erro ao salvar lead no n8n:', err));
     }
 
     const client = new MercadoPagoConfig({ accessToken });
     const preference = new Preference(client);
-
     const baseUrl = process.env.SITE_URL || `https://${req.headers.host}`;
 
     const result = await preference.create({
@@ -73,6 +83,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           nome,
           email,
           restaurante,
+          telefone,
           ts: Date.now(),
         }),
         statement_descriptor: 'BELOPRATO',
