@@ -9,11 +9,17 @@ const timeline = [
   { icon: "🎉", title: "Fotos prontas no e-mail", time: "Após processamento", status: "pending" },
 ];
 
+const motivosFalha = [
+  "Saldo insuficiente no cartão",
+  "Dados do cartão digitados incorretamente",
+  "Cartão não habilitado para compras online",
+  "Limite de compras atingido",
+];
+
 const Obrigado = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // Mercado Pago redirects with: collection_status, payment_id, status, external_reference, preference_id
   const mpStatus = searchParams.get("collection_status") || searchParams.get("status") || "approved";
   const status = mpStatus === "null" ? "approved" : mpStatus;
   const token = searchParams.get("payment_id") || searchParams.get("token") || "";
@@ -45,31 +51,95 @@ const Obrigado = () => {
       </header>
 
       <div className="max-w-xl mx-auto px-4 py-16">
+
+        {/* ── FALHA ── */}
         {status === "failed" && (
           <div className="text-center">
             <div className="text-5xl mb-4">😕</div>
             <h1 className="font-playfair text-2xl font-bold text-destructive mb-3">
               Pagamento não realizado
             </h1>
-            <p className="text-muted-foreground text-sm mb-6">
-              Houve um problema com o pagamento. Você pode tentar novamente.
+            <p className="text-muted-foreground text-sm mb-8 max-w-sm mx-auto">
+              Não conseguimos processar seu pagamento. Isso pode ter acontecido por alguns motivos:
             </p>
-            <a href="/#pacotes" className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-bold text-sm inline-block">
-              Tentar novamente
+
+            <div className="bg-secondary border border-border rounded-xl p-5 mb-8 text-left">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3 font-mono">
+                Possíveis causas
+              </p>
+              <ul className="space-y-2">
+                {motivosFalha.map((motivo) => (
+                  <li key={motivo} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <span className="text-destructive flex-shrink-0 mt-0.5">·</span>
+                    {motivo}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <a
+              href="/#pacotes"
+              className="bg-primary text-primary-foreground px-8 py-4 rounded-lg font-bold text-sm inline-block mb-4"
+            >
+              Tentar novamente →
             </a>
+            <p className="text-muted-foreground text-xs">
+              Problema persistindo?{" "}
+              <a href="mailto:contato@beloprato.com" className="text-primary underline">
+                Fale conosco
+              </a>
+            </p>
           </div>
         )}
 
+        {/* ── PENDENTE ── */}
         {status === "pending" && (
           <div className="text-center">
             <div className="text-5xl mb-4">⏳</div>
-            <h1 className="font-playfair text-2xl font-bold mb-3">Pagamento em análise</h1>
-            <p className="text-muted-foreground text-sm">
-              Seu pagamento está sendo processado. Você receberá uma confirmação por e-mail assim que for aprovado.
+            <p className="text-primary text-xs tracking-wider uppercase mb-2 font-mono">
+              Aguardando confirmação
+            </p>
+            <h1 className="font-playfair text-2xl font-bold mb-3">
+              Seu pagamento está sendo processado
+            </h1>
+            <p className="text-muted-foreground text-sm mb-8 max-w-sm mx-auto">
+              Pagamentos via boleto ou Pix podem levar até <strong className="text-foreground">2 dias úteis</strong> para serem confirmados pelo banco.
+            </p>
+
+            <div className="bg-secondary border border-border rounded-xl p-5 mb-8 text-left space-y-4">
+              <div className="flex items-start gap-3">
+                <span className="text-primary text-lg flex-shrink-0">1.</span>
+                <div>
+                  <p className="text-sm text-foreground font-bold mb-0.5">Pague o boleto ou Pix</p>
+                  <p className="text-xs text-muted-foreground">Verifique seu e-mail ou o app do Mercado Pago para acessar o código.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-primary text-lg flex-shrink-0">2.</span>
+                <div>
+                  <p className="text-sm text-foreground font-bold mb-0.5">Aguarde a confirmação</p>
+                  <p className="text-xs text-muted-foreground">Assim que o banco confirmar, você receberá um e-mail com o link para enviar suas fotos.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-primary text-lg flex-shrink-0">3.</span>
+                <div>
+                  <p className="text-sm text-foreground font-bold mb-0.5">Envie suas fotos</p>
+                  <p className="text-xs text-muted-foreground">O link chegará automaticamente após a confirmação. Não é necessário fazer nada agora.</p>
+                </div>
+          </div>
+            </div>
+
+            <p className="text-muted-foreground text-xs">
+              Dúvidas?{" "}
+              <a href="mailto:contato@beloprato.com" className="text-primary underline">
+                contato@beloprato.com
+              </a>
             </p>
           </div>
         )}
 
+        {/* ── APROVADO ── */}
         {status === "approved" && (
           <>
             <div className="text-center mb-12">
@@ -90,9 +160,7 @@ const Obrigado = () => {
 
             {/* Timeline */}
             <div className="relative pl-8">
-              {/* Vertical line */}
               <div className="absolute left-3 top-0 bottom-0 w-px bg-border" />
-
               {timeline.map((step, i) => (
                 <div key={i} className="relative mb-8 last:mb-0">
                   <div
@@ -118,7 +186,8 @@ const Obrigado = () => {
 
             <div className="mt-12 text-center">
               <p className="text-muted-foreground text-xs">
-                Dúvidas? Escreva para <span className="text-primary">contato@beloprato.com.br</span>
+                Dúvidas? Escreva para{" "}
+                <span className="text-primary">contato@beloprato.com.br</span>
               </p>
             </div>
           </>

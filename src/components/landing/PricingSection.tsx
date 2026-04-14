@@ -6,7 +6,8 @@ import { PACOTES } from "@/lib/config";
 const maskPhone = (value: string) => {
   const digits = value.replace(/\D/g, "").slice(0, 11);
   if (digits.length <= 2) return `(${digits}`;
-  if (digits.length <= 7) return `(${digits.slice(0,2)}) ${digits.slice(2)}`;
+  if (digits.length <= 6) return `(${digits.slice(0,2)}) ${digits.slice(2)}`;
+  if (digits.length <= 10) return `(${digits.slice(0,2)}) ${digits.slice(2,6)}-${digits.slice(6)}`;
   return `(${digits.slice(0,2)}) ${digits.slice(2,7)}-${digits.slice(7)}`;
 };
 
@@ -105,33 +106,33 @@ const PricingSection = () => {
               {expandedId === pacote.id ? (
                 <div className="space-y-3">
                   <input
-                    type="text"
-                    placeholder="Seu nome"
-                    value={form.nome}
-                    onChange={(e) => setForm({ ...form, nome: e.target.value })}
-                    className={inputClass}
-                  />
-                  <input
-                    type="email"
-                    placeholder="Seu e-mail"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className={inputClass}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Nome do restaurante"
-                    value={form.restaurante}
-                    onChange={(e) => setForm({ ...form, restaurante: e.target.value })}
-                    className={inputClass}
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Telefone com DDD (ex: (34) 99999-9999)"
-                    value={form.telefone}
-                    onChange={handlePhoneChange}
-                    className={inputClass}
-                  />
+  type="text"
+  placeholder="Seu nome"
+  value={form.nome}
+  onChange={(e) => setForm({ ...form, nome: e.target.value })}
+  className={inputClass}
+/>
+<input
+  type="email"
+  placeholder="Seu e-mail"
+  value={form.email}
+  onChange={(e) => setForm({ ...form, email: e.target.value })}
+  className={inputClass}
+/>
+<input
+  type="tel"
+  placeholder="Telefone com DDD"
+  value={form.telefone}
+  onChange={handlePhoneChange}
+  className={inputClass}
+/>
+<input
+  type="text"
+  placeholder="Nome do restaurante"
+  value={form.restaurante}
+  onChange={(e) => setForm({ ...form, restaurante: e.target.value })}
+  className={inputClass}
+/>
                   <Button
                     variant="gold"
                     className="w-full"
