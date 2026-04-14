@@ -1,42 +1,46 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-type Estado = "validando" | "invalido" | "pronto" | "enviando" | "sucesso" | "erro";
+type Estado = "validando" | "invalido" | "pronto" | "enviando" | "sucesso" | "finished" | "erro";
 
 const Upload = () => {
   const [estado, setEstado] = useState<Estado>("validando");
   const [token, setToken] = useState("");
   const [qtd, setQtd] = useState(5);
+  const [photosRemaining, setPhotosRemaining] = useState(0);
+  const [photosQty, setPhotosQty] = useState(5);
   const [fotos, setFotos] = useState<File[]>([]);
   const [progresso, setProgresso] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const pacoteNome = qtd >= 30 ? "Premium" : qtd >= 15 ? "Profissional" : "Básico";
+  const pacoteNome = photosQty >= 30 ? "Premium" : photosQty >= 15 ? "Profissional" : "Básico";
 
-useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-  const t = params.get("token");
-  if (!t) {
-    setEstado("invalido");
-    return;
-  }
-  setToken(t);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get("token");
+    if (!t) {
+      setEstado("invalido");
+      return;
+    }
+    setToken(t);
 
-  fetch(`/api/orderinfo?token=${t}`)
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.error || !data.photos_qty) {
-        setEstado("invalido");
-        return;
-      }
-      if (data.status !== "waiting_upload") {
-        setEstado("invalido");
-        return;
-      }
-      setQtd(data.photos_qty);
-      setEstado("pronto");
-    })
-    .catch(() => setEstado("invalido"));
-}, []);
+    fetch(`/api/orderinfo?token=${t}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error || !data.photos_qty) {
+          setEstado("invalido");
+          return;
+        }
+        if (data.status === "finished" || data.photos_remaining === 0) {
+          setEstado("finished");
+          return;
+        }
+        setPhotosQty(data.photos_qty);
+        setPhotosRemaining(data.photos_remaining ?? data.photos_qty);
+        setQtd(data.photos_remaining ?? data.photos_qty);
+        setEstado("pronto");
+      })
+      .catch(() => setEstado("invalido"));
+  }, []);
 
   const handleFiles = useCallback((files: FileList | null) => {
     if (!files) return;
@@ -83,7 +87,15 @@ useEffect(() => {
 
       clearInterval(interval);
       setProgresso(100);
-      setTimeout(() => setEstado("sucesso"), 500);
+      const remaining = photosRemaining - fotos.length;
+      setPhotosRemaining(Math.max(0, remaining));
+      setTimeout(() => {
+        if (remaining <= 0) {
+          setEstado("finished");
+        } else {
+          setEstado("sucesso");
+        }
+      }, 500);
     } catch {
       clearInterval(interval);
       setEstado("erro");
@@ -105,6 +117,7 @@ useEffect(() => {
       </header>
 
       <div className="max-w-2xl mx-auto px-4 py-12">
+
         {estado === "validando" && (
           <div className="text-center py-20">
             <div className="animate-spin text-4xl mb-4">⏳</div>
@@ -123,7 +136,9 @@ useEffect(() => {
         {estado === "pronto" && (
           <>
             <div className="text-center mb-8">
-              <p className="text-primary text-xs tracking-wider uppercase mb-2">Passo 2 de 4</p>
+              <p className="text-primary text-xs tracking-wider uppercase mb-2">
+                {photosRemaining < photosQty ? "Envio parcial" : "Passo 2 de 4"}
+              </p>
               <h1 className="font-playfair text-3xl sm:text-4xl font-bold mb-3">
                 Envie suas fotos e aguarde a <em className="text-primary">mágica</em>
               </h1>
@@ -135,7 +150,10 @@ useEffect(() => {
             {/* Package bar */}
             <div className="flex items-center justify-between bg-secondary rounded-lg p-4 mb-6 border border-border">
               <span className="text-sm text-muted-foreground">Pacote {pacoteNome}</span>
-              <span className="font-playfair text-2xl font-bold text-primary">{qtd} fotos</span>
+              <div className="text-right">
+                <span className="font-playfair text-2xl font-bold text-primary">{photosRemaining}</span>
+                <span className="text-muted-foreground text-sm ml-1">/ {photosQty} fotos restantes</span>
+              </div>
             </div>
 
             {/* Tips */}
@@ -173,16 +191,11 @@ useEffect(() => {
               </div>
             )}
 
-            {/* Preview grid */}
             {fotos.length > 0 && (
               <div className="grid grid-cols-4 gap-2 mb-6">
                 {fotos.map((foto, i) => (
                   <div key={i} className="relative aspect-square rounded-lg overflow-hidden group">
-                    <img
-                      src={URL.createObjectURL(foto)}
-                      alt={foto.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={URL.createObjectURL(foto)} alt={foto.name} className="w-full h-full object-cover" />
                     <button
                       onClick={() => removePhoto(i)}
                       className="absolute top-1 right-1 w-6 h-6 bg-background/80 rounded-full text-foreground text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
@@ -227,11 +240,45 @@ useEffect(() => {
         {estado === "sucesso" && (
           <div className="text-center py-20">
             <div className="text-5xl mb-4">🎉</div>
-            <h2 className="font-playfair text-2xl font-bold mb-3">Fotos enviadas com sucesso!</h2>
-            <p className="text-muted-foreground text-sm max-w-md mx-auto mb-6">
-              Nossa IA já começou a processar. Você receberá as fotos profissionais no seu e-mail em até 24h.
+            <h2 className="font-playfair text-2xl font-bold mb-3">Fotos enviadas!</h2>
+            <p className="text-muted-foreground text-sm max-w-md mx-auto mb-4">
+              Nossa IA já começou a processar. Você receberá as fotos no seu e-mail em breve.
             </p>
-            <a href="/" className="text-primary text-sm hover:underline">← Voltar ao início</a>
+            {photosRemaining > 0 && (
+              <div className="bg-secondary border border-border rounded-lg p-4 mb-6 inline-block">
+                <p className="text-sm text-muted-foreground">Saldo restante no pacote</p>
+                <p className="font-playfair text-3xl font-bold text-primary">{photosRemaining} fotos</p>
+              </div>
+            )}
+            <div className="flex flex-col gap-3 items-center">
+              {photosRemaining > 0 && (
+                <button
+                  onClick={() => { setFotos([]); setQtd(photosRemaining); setEstado("pronto"); }}
+                  className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-bold text-sm"
+                >
+                  Enviar mais {photosRemaining} foto(s) →
+                </button>
+              )}
+              <a href="/" className="text-muted-foreground text-xs hover:text-foreground transition-colors">
+                ← Voltar ao início
+              </a>
+            </div>
+          </div>
+        )}
+
+        {estado === "finished" && (
+          <div className="text-center py-20">
+            <div className="text-5xl mb-4">✅</div>
+            <h2 className="font-playfair text-2xl font-bold mb-3">Pacote concluído!</h2>
+            <p className="text-muted-foreground text-sm max-w-md mx-auto mb-6">
+              Todas as suas fotos foram processadas e enviadas por e-mail. Quer transformar mais pratos?
+            </p>
+            <a
+              href="https://beloprato.com/#pacotes"
+              className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-bold text-sm inline-block"
+            >
+              Comprar mais fotos →
+            </a>
           </div>
         )}
 
@@ -248,6 +295,7 @@ useEffect(() => {
             </button>
           </div>
         )}
+
       </div>
     </div>
   );

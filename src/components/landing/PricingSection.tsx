@@ -2,9 +2,17 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { PACOTES } from "@/lib/config";
 
+// Máscara brasileira de telefone: (XX) XXXXX-XXXX
+const maskPhone = (value: string) => {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 2) return `(${digits}`;
+  if (digits.length <= 7) return `(${digits.slice(0,2)}) ${digits.slice(2)}`;
+  return `(${digits.slice(0,2)}) ${digits.slice(2,7)}-${digits.slice(7)}`;
+};
+
 const PricingSection = () => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [form, setForm] = useState({ nome: "", email: "", restaurante: "" });
+  const [form, setForm] = useState({ nome: "", email: "", restaurante: "", telefone: "" });
   const [loading, setLoading] = useState(false);
 
   const isDebugMode = useMemo(() => {
@@ -14,15 +22,19 @@ const PricingSection = () => {
 
   const visiblePackages = useMemo(() => {
     return PACOTES.filter(pacote => {
-      if (pacote.id === 'teste') {
-        return isDebugMode;
-      }
+      if (pacote.id === 'teste') return isDebugMode;
       return true;
     });
   }, [isDebugMode]);
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, telefone: maskPhone(e.target.value) });
+  };
+
+  const isFormValid = form.nome && form.email && form.restaurante && form.telefone.replace(/\D/g, "").length >= 10;
+
   const handleSubmit = async (pacoteId: string) => {
-    if (!form.nome || !form.email || !form.restaurante) return;
+    if (!isFormValid) return;
     setLoading(true);
     try {
       const res = await fetch("/api/criar-pagamento", {
@@ -31,9 +43,7 @@ const PricingSection = () => {
         body: JSON.stringify({ pacote: pacoteId, ...form }),
       });
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Erro no servidor");
-      }
+      if (!res.ok) throw new Error(data.error || "Erro no servidor");
       if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
       } else {
@@ -45,6 +55,8 @@ const PricingSection = () => {
       setLoading(false);
     }
   };
+
+  const inputClass = "w-full bg-background border border-border rounded-md px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary";
 
   return (
     <section id="pacotes" className="py-20 md:py-28 bg-card">
@@ -97,26 +109,33 @@ const PricingSection = () => {
                     placeholder="Seu nome"
                     value={form.nome}
                     onChange={(e) => setForm({ ...form, nome: e.target.value })}
-                    className="w-full bg-background border border-border rounded-md px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                    className={inputClass}
                   />
                   <input
                     type="email"
                     placeholder="Seu e-mail"
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className="w-full bg-background border border-border rounded-md px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                    className={inputClass}
                   />
                   <input
                     type="text"
                     placeholder="Nome do restaurante"
                     value={form.restaurante}
                     onChange={(e) => setForm({ ...form, restaurante: e.target.value })}
-                    className="w-full bg-background border border-border rounded-md px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                    className={inputClass}
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Telefone com DDD (ex: (34) 99999-9999)"
+                    value={form.telefone}
+                    onChange={handlePhoneChange}
+                    className={inputClass}
                   />
                   <Button
                     variant="gold"
                     className="w-full"
-                    disabled={loading || !form.nome || !form.email || !form.restaurante}
+                    disabled={loading || !isFormValid}
                     onClick={() => handleSubmit(pacote.id)}
                   >
                     {loading ? "Processando..." : "Pagar agora →"}
