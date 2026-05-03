@@ -2,27 +2,33 @@ import { Button } from "@/components/ui/button";
 
 const pairs = [
   {
-    img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800",
+    antes: "/images/BeloPrato01_Antes.jpeg",
+    depois: "/images/BeloPrato01_Depois.jpeg",
     legenda: "Pizza Margherita — Restaurante Don Carlo, SP",
   },
   {
-    img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800",
+    antes: "/images/BeloPrato02_Antes.webp",
+    depois: "/images/BeloPrato02_Depois.jpeg",
     legenda: "Pasta Carbonara — Trattoria Bella, RJ",
   },
   {
-    img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800",
+    antes: "/images/BeloPrato03_Antes.webp",
+    depois: "/images/BeloPrato03_Depois.png",
     legenda: "Sushi Premium — Hikari Sushi Bar, POA",
   },
   {
-    img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800",
+    antes: "/images/BeloPrato04_Antes.jpeg",
+    depois: "/images/BeloPrato04_Depois.jpeg",
     legenda: "Bife Ancho — Parrilla Sur, Curitiba",
   },
   {
-    img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800",
+    antes: "/images/BeloPrato05_Antes.jpeg",
+    depois: "/images/BeloPrato05_Depois.jpeg",
     legenda: "Salada Tropical — Bistrô Verde, BH",
   },
   {
-    img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800",
+    antes: "/images/BeloPrato06_Antes.jpeg",
+    depois: "/images/BeloPrato06_Depois.jpeg",
     legenda: "Petit Gâteau — Confeitaria Doce Flor, SP",
   },
 ];
@@ -41,9 +47,9 @@ const BeforeAfter = () => {
               <div className="grid grid-cols-2 gap-2">
                 <div className="relative rounded-lg overflow-hidden">
                   <img
-                    src={pair.img}
+                    src={pair.antes}
                     alt="Antes"
-                    className="w-full aspect-square object-cover saturate-[0.4] brightness-[0.65]"
+                    className="w-full aspect-square object-cover"
                     loading="lazy"
                   />
                   <span className="absolute top-2 left-2 bg-destructive/80 text-foreground text-[10px] font-bold px-2 py-0.5 rounded">
@@ -52,7 +58,7 @@ const BeforeAfter = () => {
                 </div>
                 <div className="relative rounded-lg overflow-hidden border border-primary/30">
                   <img
-                    src={pair.img}
+                    src={pair.depois}
                     alt="Depois"
                     className="w-full aspect-square object-cover"
                     loading="lazy"
