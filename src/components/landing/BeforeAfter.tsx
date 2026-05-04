@@ -49,7 +49,7 @@ const BeforeAfter = () => {
                   <img
                     src={pair.antes}
                     alt="Antes"
-                    className="w-full aspect-square object-cover"
+                    className="w-full aspect-square object-cover saturate-[0.4] brightness-[0.65]"
                     loading="lazy"
                   />
                   <span className="absolute top-2 left-2 bg-destructive/80 text-foreground text-[10px] font-bold px-2 py-0.5 rounded">

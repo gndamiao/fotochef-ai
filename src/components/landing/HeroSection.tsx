@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 
 const IMAGES = {
-  restaurante: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200",
-  hamburger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800",
+  restaurante: "/images/BeloPrato07_Depois.jpeg",
+  hamburgerAntes: "/images/BeloPrato07_Antes.jpeg",
+  hamburgerDepois: "/images/BeloPrato07_Depois.jpeg",
 };
 
 const Hero = () => {
@@ -64,7 +65,7 @@ const Hero = () => {
         <div className="grid grid-cols-2 gap-4 mt-12">
           <div className="relative rounded-lg overflow-hidden">
             <img
-              src={IMAGES.hamburger}
+              src={IMAGES.hamburgerAntes}
               alt="Hambúrguer antes"
               className="w-full aspect-[4/3] object-cover saturate-[0.4] brightness-[0.6]"
             />
@@ -74,7 +75,7 @@ const Hero = () => {
           </div>
           <div className="relative rounded-lg overflow-hidden border border-primary/30">
             <img
-              src={IMAGES.hamburger}
+              src={IMAGES.hamburgerDepois}
               alt="Hambúrguer depois"
               className="w-full aspect-[4/3] object-cover"
             />
